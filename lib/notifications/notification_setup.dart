@@ -7,7 +7,6 @@ class NotificationSetup {
       FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
-    // 1. Initialize Local Notifications
     const initializationSettingsAndroid = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
@@ -28,7 +27,6 @@ class NotificationSetup {
       },
     );
 
-    // 2. Setup FCM foreground message handling
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint('Received FCM in foreground: ${message.messageId}');
 
@@ -42,7 +40,6 @@ class NotificationSetup {
       }
     });
 
-    // 3. Setup FCM background message handling
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
@@ -52,8 +49,8 @@ class NotificationSetup {
     String? payload,
   }) async {
     const androidDetails = AndroidNotificationDetails(
-      'high_importance_channel', // id
-      'High Importance Notifications', // name
+      'high_importance_channel', 
+      'High Importance Notifications', 
       importance: Importance.max,
       priority: Priority.high,
     );
@@ -66,7 +63,7 @@ class NotificationSetup {
     );
 
     await _localNotifications.show(
-      id: DateTime.now().millisecond, // unique id
+      id: DateTime.now().millisecond, 
       title: title,
       body: body,
       notificationDetails: details,
@@ -75,10 +72,8 @@ class NotificationSetup {
   }
 }
 
-// Must be a top-level function for background execution
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // In a real app, initialize Firebase here if needed.
-  // We avoid it here as we are using placeholder credentials.
+
   debugPrint('Handling a background message: ${message.messageId}');
 }
