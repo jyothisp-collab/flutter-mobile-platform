@@ -6,10 +6,8 @@ import 'package:flutter_mobile_platform_showcase/features/home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase (with placeholders for credentials)
   await FirebaseSetup.initialize();
 
-  // Setup Local Notifications & FCM behavior
   await NotificationSetup.initialize();
 
   runApp(const ShowcaseApp());
