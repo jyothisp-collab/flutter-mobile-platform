@@ -3,7 +3,7 @@ import 'package:flutter_mobile_platform_showcase/firebase/firebase_setup.dart';
 import 'package:flutter_mobile_platform_showcase/notifications/notification_setup.dart';
 import 'package:flutter_mobile_platform_showcase/features/home_page.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await FirebaseSetup.initialize();

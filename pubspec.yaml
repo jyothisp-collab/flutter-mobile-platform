@@ -1,16 +1,16 @@
 name: flutter_mobile_platform_showcase
-description: "A new Flutter project."
+description: "A showcase app demonstrating FCM, local notifications, and MethodChannel integration."
 publish_to: 'none'
 version: 0.1.0+1
 
 environment:
-  sdk: ^3.6.0
+  sdk: ">=3.6.0 <4.0.0"
 
 dependencies:
-  firebase_core: ^4.15.0
-  firebase_messaging: ^16.7.0
   flutter:
     sdk: flutter
+  firebase_core: ^4.15.0
+  firebase_messaging: ^16.7.0
   flutter_local_notifications: ^22.3.1
 
 dev_dependencies:

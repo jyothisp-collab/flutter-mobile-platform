@@ -10,7 +10,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
           if (methodCall.method == 'getDeviceInfo') {
-            return 'Mock Test Device OS 1.0 - Test Model';
+            return 'Mock Device OS 1.0 - Test Model';
           }
           return null;
         });
@@ -31,10 +31,10 @@ void main() {
 
     // Tap the button to fetch native info
     await tester.tap(find.byType(ElevatedButton));
-    await tester.pump(); // Start the loading state
-    await tester.pumpAndSettle(); // Finish the loading state
+    await tester.pump();
+    await tester.pumpAndSettle();
 
     // Should display the mocked native info
-    expect(find.text('Mock Test Device OS 1.0 - Test Model'), findsOneWidget);
+    expect(find.text('Mock Device OS 1.0 - Test Model'), findsOneWidget);
   });
 }

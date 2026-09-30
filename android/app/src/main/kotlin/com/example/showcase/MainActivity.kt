@@ -1,4 +1,4 @@
-package com.example.flutter_mobile_platform_showcase
+package com.example.showcase
 
 import android.os.Build
 import androidx.annotation.NonNull

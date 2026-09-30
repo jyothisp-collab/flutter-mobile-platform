@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.flutter_mobile_platform_showcase"
+    namespace = "com.example.showcase"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,7 +9,7 @@ class NotificationSetup {
 
   static Future<void> initialize() async {
     const initializationSettingsAndroid = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+      'ic_launcher_foreground',
     );
     const initializationSettingsIOS = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -27,20 +28,41 @@ class NotificationSetup {
       },
     );
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('Received FCM in foreground: ${message.messageId}');
+    if (!kIsWeb) {
+      await _createNotificationChannel();
+    }
 
-      final notification = message.notification;
-      if (notification != null && !kIsWeb) {
-        _showLocalNotification(
-          title: notification.title ?? 'New Message',
-          body: notification.body ?? '',
-          payload: message.data.toString(),
-        );
-      }
-    });
+    FirebaseMessaging.onMessage.listen(_onForegroundMessage);
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  static Future<void> _createNotificationChannel() async {
+    const channel = AndroidNotificationChannel(
+      'showcase_channel',
+      'Showcase Notifications',
+      description: 'Notifications for the platform showcase app',
+      importance: Importance.high,
+    );
+
+    final plugin = _localNotifications
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    await plugin?.createNotificationChannel(channel);
+  }
+
+  static Future<void> _onForegroundMessage(RemoteMessage message) async {
+    debugPrint('Received FCM in foreground: ${message.messageId}');
+
+    final notification = message.notification;
+    if (notification != null && !kIsWeb) {
+      await _showLocalNotification(
+        title: notification.title ?? 'New Message',
+        body: notification.body ?? '',
+        payload: message.data.toString(),
+      );
+    }
   }
 
   static Future<void> _showLocalNotification({
@@ -49,8 +71,9 @@ class NotificationSetup {
     String? payload,
   }) async {
     const androidDetails = AndroidNotificationDetails(
-      'high_importance_channel', 
-      'High Importance Notifications', 
+      'showcase_channel',
+      'Showcase Notifications',
+      channelDescription: 'Notifications for the platform showcase app',
       importance: Importance.max,
       priority: Priority.high,
     );
@@ -63,10 +86,10 @@ class NotificationSetup {
     );
 
     await _localNotifications.show(
-      id: DateTime.now().millisecond, 
-      title: title,
-      body: body,
-      notificationDetails: details,
+      DateTime.now().millisecondsSinceEpoch % 100000,
+      title,
+      body,
+      details,
       payload: payload,
     );
   }
@@ -74,6 +97,8 @@ class NotificationSetup {
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Required: initialize Firebase in the background isolate.
+  await Firebase.initializeApp();
 
   debugPrint('Handling a background message: ${message.messageId}');
 }
